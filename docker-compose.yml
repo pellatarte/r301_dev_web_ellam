@@ -1,0 +1,30 @@
+services:
+  web:
+    image: php:8.5.10-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.4
+    ports:
+      - "13306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: skillswap
+      MYSQL_DATABASE: skillswap
+      MYSQL_USER: skillswap
+      MYSQL_PASSWORD: skillswap
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./data:/docker-entrypoint-initdb.d
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8081:8080"
+ 
+volumes:
+  db_data:
