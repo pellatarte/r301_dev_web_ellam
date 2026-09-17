@@ -11,9 +11,11 @@
 
     $prenom = "Elodie";
 
-    echo strlen($prenom);
+    echo strlen($prenom) . "\n";
 
     $prenom = "Élodie";
 
-    echo strlen($prenom);
+    echo strlen($prenom). "\n"; 
+
+    /* on nous ressort qu'il y a un caractère en plus à cause de l'accent aigu */
 ?>
