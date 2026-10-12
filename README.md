@@ -42,8 +42,8 @@ php cli/nom_du_script.php
 ## Avancement
 
 - [x] **S1** — Premiers pas en PHP : CLI + premières pages dynamiques
-- [ ] **S2** — MySQL entre en scène (PDO, requêtes préparées)
-- [ ] ... la suite arrive
+- [x] **S2** — MySQL entre en scène (PDO, requêtes préparées)
+- [ ] **S3** — 
 
 ## Auteur
 
