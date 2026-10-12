@@ -1,9 +1,5 @@
 -- TP2 — SkillSwap — Partie B : requêtes SQL
 --
--- Les requêtes ci-dessous sont les requêtes à exécuter dans Adminer.
--- Elles ne contiennent aucun résultat inventé : les résultats sont ceux de la base.
--- Moteur visé : MySQL 8.x.
---
 -- Schéma utilisé par le sujet :
 --   competence (avec libelle et categorie_id)
 --   categorie (avec libelle)
@@ -175,12 +171,3 @@ WHERE NOT EXISTS (
     WHERE m.collaborateur_id = co.id
 )
 ORDER BY co.id ASC;
-
-/* ========================================================================== */
-/* RAPPEL                                                                    */
-/* ========================================================================== */
-
--- La requête de référence à réutiliser pour remplacer nb_maitrises dans les
--- pages PHP est la requête LEFT JOIN de B4 (celle qui compte
--- m.competence_id). Ne pas placer ce fichier dans sql/ : le sujet demande
--- notes/mes-requetes.sql, car les fichiers de sql/ sont rejoués par MySQL.
