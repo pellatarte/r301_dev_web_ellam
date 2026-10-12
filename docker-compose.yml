@@ -1,30 +1,64 @@
+# =====================================================================
+# SkillSwap - environnement de développement du module R3.01.
+#
+# Trois services, et rien d'autre à installer sur votre poste :
+#   web     : Apache + PHP 8.3, c'est lui qui exécute votre code
+#   db      : la base MySQL
+#   adminer : l'interface web pour regarder la base
+#
+# Pour démarrer :  docker compose up -d --build
+# =====================================================================
 services:
+
   web:
-    image: php:8.5.10-apache
+    build: ./docker/php
+    container_name: skillswap-web
     ports:
+      # À GAUCHE votre machine, à DROITE l'intérieur du conteneur.
+      # Apache écoute sur 80 dans le conteneur ; vous tapez localhost:8080.
       - "8080:80"
     volumes:
+      # TOUT le projet est monté, pas seulement public/ :
+      # c'est ce qui permet d'exécuter cli/ et d'inclure inc/ et data/.
+      # Le dossier est partagé : vous éditez sous VS Code, le conteneur voit
+      # la modification immédiatement. Rien à copier, rien à redémarrer.
       - ./:/var/www/html
     depends_on:
-      - db
+      # web n'attend pas seulement que db soit lancé, mais qu'il RÉPONDE.
+      # Sans cela, la première page de la séance 2 échoue sur une base
+      # qui n'a pas fini de s'initialiser.
+      db:
+        condition: service_healthy
 
   db:
     image: mysql:8.4
+    container_name: skillswap-db
     ports:
       - "13306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: skillswap
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: skillswap
       MYSQL_USER: skillswap
       MYSQL_PASSWORD: skillswap
     volumes:
       - db_data:/var/lib/mysql
-      - ./data:/docker-entrypoint-initdb.d
+      # Les scripts SQL ne sont rejoués qu'à la CRÉATION du volume.
+      # Pour repartir d'une base neuve : docker compose down -v
+      - ./sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uskillswap", "-pskillswap"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
 
   adminer:
     image: adminer:latest
+    container_name: skillswap-adminer
     ports:
       - "8081:8080"
- 
+    depends_on:
+      - db
+
 volumes:
   db_data:
